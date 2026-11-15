@@ -46,6 +46,16 @@ EXT_1002_PASSWORD=${USER_PASS_1002}
 VPS_PUBLIC_IP=${USER_VPS_IP}
 EOF
 
+# Auto-generate self-signed TLS certificates for PJSIP TLS transport if missing
+mkdir -p asterisk/keys
+if [ ! -f asterisk/keys/asterisk.crt ] || [ ! -f asterisk/keys/asterisk.key ]; then
+    echo "[*] Generating self-signed TLS certificates for SIP TLS encryption..."
+    openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+        -keyout asterisk/keys/asterisk.key -out asterisk/keys/asterisk.crt \
+        -subj "/C=IN/ST=India/L=JioPBX/O=SelfHosted/CN=${USER_VPS_IP}" >/dev/null 2>&1 || true
+    echo "[+] TLS certificates created in asterisk/keys/"
+fi
+
 # Idempotently generate pjsip.conf from template
 if [ -f asterisk/pjsip.conf.template ]; then
     sed -e "s/{{EXT_1001_PASSWORD}}/${USER_PASS_1001}/g" \
@@ -68,8 +78,10 @@ echo ""
 echo "=========================================================="
 echo "🎉 SUCCESS: Your JioFiber Global PBX is now running!"
 echo "=========================================================="
-echo "• PBX Host:               ${USER_VPS_IP}:5060"
+echo "• PBX Host (UDP):         ${USER_VPS_IP}:5060"
+echo "• PBX Host (TLS):         ${USER_VPS_IP}:5061"
 echo "• Mobile Extension:       1001 (Password: ${USER_PASS_1001})"
 echo "• Laptop Extension:       1002 (Password: ${USER_PASS_1002})"
+echo "• TLS Cert Directory:     ./asterisk/keys/"
 echo "• Reverse Tunnel Script:  ./router-agent/setup_router_tunnel.sh"
 echo "=========================================================="

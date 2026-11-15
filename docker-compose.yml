@@ -9,6 +9,7 @@ services:
       - ./asterisk/extensions.conf:/etc/asterisk/extensions.conf:ro
       - ./asterisk/rtp.conf:/etc/asterisk/rtp.conf:ro
       - ./asterisk/modules.conf:/etc/asterisk/modules.conf:ro
+      - ./asterisk/keys:/etc/asterisk/keys:ro
       - asterisk-spool:/var/spool/asterisk
       - asterisk-logs:/var/log/asterisk
     environment:
