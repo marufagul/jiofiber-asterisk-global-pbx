@@ -141,6 +141,16 @@ Exposing a SIP server to the public Internet without protection invites automate
 
 ---
 
+## 🔧 Cellular Carrier CGNAT & Tunneling Troubleshooting
+
+> [!TIP]
+> **Carrier CGNAT Dropping WireGuard UDP?**  
+> In certain circles, cellular 5G carriers drop persistent unestablished UDP traffic, causing WireGuard handshakes to stall.  
+> We have included a full guide and automation script for our bulletproof **SSH Layer 3 Tunnel (`tun10`)** running over TCP 2222:  
+> 👉 [Read the SSH Layer 3 Tunnel Guide](docs/SSH_L3_TUNNEL_FALLBACK.md)
+
+---
+
 ## 📄 License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for details.
