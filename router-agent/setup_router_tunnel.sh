@@ -26,9 +26,14 @@ fi
 
 echo "[*] Setting up WireGuard tunnel to Asterisk PBX at $VPS_HOST..."
 
-# Install WireGuard packages if missing
-opkg update
-opkg install wireguard-tools kmod-wireguard luci-proto-wireguard 2>/dev/null || true
+# Install WireGuard packages if missing (Supports OpenWrt 25.x apk and 23.05/24.10 opkg)
+if command -v apk >/dev/null 2>&1; then
+    apk update >/dev/null 2>&1 || true
+    apk add wireguard-tools kmod-wireguard luci-proto-wireguard >/dev/null 2>&1 || true
+elif command -v opkg >/dev/null 2>&1; then
+    opkg update >/dev/null 2>&1 || true
+    opkg install wireguard-tools kmod-wireguard luci-proto-wireguard >/dev/null 2>&1 || true
+fi
 
 # Generate router WireGuard keys if not present
 mkdir -p /etc/wireguard
