@@ -1,6 +1,6 @@
 #!/bin/sh
 # ==============================================================================
-# JioFiber Asterisk Global PBX - Automated Setup Wizard
+# JioFiber Asterisk Global PBX - Automated Setup Wizard (Idempotent)
 # Author: Gul Marufa (@marufagul)
 # https://github.com/marufagul/jiofiber-asterisk-global-pbx
 # ==============================================================================
@@ -11,13 +11,6 @@ echo "=========================================================="
 echo "🌍 JioFiber Asterisk Global PBX Setup Wizard"
 echo "   Developed by Gul Marufa (@marufagul)"
 echo "=========================================================="
-
-if [ ! -f .env ]; then
-    if [ -f .env.example ]; then
-        cp .env.example .env
-        echo "[+] Created .env from template."
-    fi
-fi
 
 # Check for Docker and Docker Compose
 if ! command -v docker >/dev/null 2>&1; then
@@ -38,7 +31,7 @@ printf "Enter password for Softphone 1002 (Your Laptop): "
 read -r USER_PASS_1002
 
 # Get Public IP
-DETECTED_IP=$(curl -s https://api.ipify.org || curl -s https://icanhazip.com || echo "127.0.0.1")
+DETECTED_IP=$(curl -s https://api.ipify.org 2>/dev/null || curl -s https://icanhazip.com 2>/dev/null || echo "127.0.0.1")
 printf "Enter your VPS Public IP [%s]: " "$DETECTED_IP"
 read -r USER_VPS_IP
 if [ -z "$USER_VPS_IP" ]; then
@@ -53,18 +46,20 @@ EXT_1002_PASSWORD=${USER_PASS_1002}
 VPS_PUBLIC_IP=${USER_VPS_IP}
 EOF
 
-# Update pjsip.conf with user credentials
-if [ -f asterisk/pjsip.conf ]; then
-    sed -i "s/ChangeThisSecretKey123!/${USER_PASS_1001}/g" asterisk/pjsip.conf
-    sed -i "s/ChangeThisSecondSecretKey456!/${USER_PASS_1002}/g" asterisk/pjsip.conf
+# Idempotently generate pjsip.conf from template
+if [ -f asterisk/pjsip.conf.template ]; then
+    sed -e "s/{{EXT_1001_PASSWORD}}/${USER_PASS_1001}/g" \
+        -e "s/{{EXT_1002_PASSWORD}}/${USER_PASS_1002}/g" \
+        asterisk/pjsip.conf.template > asterisk/pjsip.conf
 fi
 
-# Update extensions.conf with user phone number
-if [ -f asterisk/extensions.conf ]; then
-    sed -i "s/MY_JIO_NUMBER=+91XXXXXXXXXX/MY_JIO_NUMBER=${USER_JIO_NUM}/g" asterisk/extensions.conf
+# Idempotently generate extensions.conf from template
+if [ -f asterisk/extensions.conf.template ]; then
+    sed -e "s/{{JIO_LANDLINE_NUMBER}}/${USER_JIO_NUM}/g" \
+        asterisk/extensions.conf.template > asterisk/extensions.conf
 fi
 
-echo "[+] Configurations successfully synchronized."
+echo "[+] Configurations successfully generated from templates."
 
 echo "[*] Launching Asterisk PBX container via Docker Compose..."
 docker compose up -d

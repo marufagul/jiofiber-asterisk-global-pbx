@@ -73,6 +73,10 @@ uci set firewall.voice_to_wg=forwarding
 uci set firewall.voice_to_wg.src='voice'
 uci set firewall.voice_to_wg.dest='wg_vps'
 
+# Enforce masquerade on voice zone so VPS packets exit with router's voice IP
+uci set firewall.voice_zone.masq='1'
+uci set firewall.voice_zone.masq6='1'
+
 uci commit network
 uci commit firewall
 /etc/init.d/network reload
