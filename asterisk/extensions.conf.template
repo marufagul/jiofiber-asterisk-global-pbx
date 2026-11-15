@@ -26,7 +26,7 @@ exten => _+91XXXXXXXXXX,1,NoOp(Outbound Call E.164 ${EXTEN})
  same => n,Set(CALLERID(num)=${MY_JIO_NUMBER})
  same => n,Set(CALLERID(name)=${MY_JIO_NUMBER})
  same => n,Set(PJSIP_HEADER(add,P-Preferred-Identity)=<sip:${MY_JIO_NUMBER}@ue.wln.ims.jio.com>)
- same => n,Dial(PJSIP/jio-trunk/sip:${EXTEN}@uw.wln.ims.jio.com,60)
+ same => n,Dial(PJSIP/jio-trunk/sip:${EXTEN}@ue.wln.ims.jio.com,60)
  same => n,Hangup()
 
 ; Standard 10-Digit Indian Mobile (starts with 6, 7, 8, or 9) -> Add +91
@@ -34,7 +34,7 @@ exten => _[6-9]XXXXXXXXX,1,NoOp(Outbound Call 10-Digit Mobile ${EXTEN})
  same => n,Set(CALLERID(num)=${MY_JIO_NUMBER})
  same => n,Set(CALLERID(name)=${MY_JIO_NUMBER})
  same => n,Set(PJSIP_HEADER(add,P-Preferred-Identity)=<sip:${MY_JIO_NUMBER}@ue.wln.ims.jio.com>)
- same => n,Dial(PJSIP/jio-trunk/sip:+91${EXTEN}@uw.wln.ims.jio.com,60)
+ same => n,Dial(PJSIP/jio-trunk/sip:+91${EXTEN}@ue.wln.ims.jio.com,60)
  same => n,Hangup()
 
 ; STD Landline with leading 0 (e.g. 011..., 022..., 080...) -> Replace 0 with +91
@@ -42,14 +42,14 @@ exten => _0[1-9]XXXXXXXXX,1,NoOp(Outbound Call STD ${EXTEN})
  same => n,Set(CALLERID(num)=${MY_JIO_NUMBER})
  same => n,Set(CALLERID(name)=${MY_JIO_NUMBER})
  same => n,Set(PJSIP_HEADER(add,P-Preferred-Identity)=<sip:${MY_JIO_NUMBER}@ue.wln.ims.jio.com>)
- same => n,Dial(PJSIP/jio-trunk/sip:+91${EXTEN:1}@uw.wln.ims.jio.com,60)
+ same => n,Dial(PJSIP/jio-trunk/sip:+91${EXTEN:1}@ue.wln.ims.jio.com,60)
  same => n,Hangup()
 
 ; Toll-free & Emergency (1800..., 198, 112)
 exten => _X.,1,NoOp(Outbound Special Service ${EXTEN})
  same => n,Set(CALLERID(num)=${MY_JIO_NUMBER})
  same => n,Set(CALLERID(name)=${MY_JIO_NUMBER})
- same => n,Dial(PJSIP/jio-trunk/sip:${EXTEN}@uw.wln.ims.jio.com,60)
+ same => n,Dial(PJSIP/jio-trunk/sip:${EXTEN}@ue.wln.ims.jio.com,60)
  same => n,Hangup()
 
 ; Incoming calls arriving from Jio IMS Voice line
