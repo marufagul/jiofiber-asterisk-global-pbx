@@ -10,9 +10,26 @@
 
 **Turn your Jio home landline into a global cloud PBX. Make and receive calls on your smartphone from anywhere in the world with zero roaming charges.**
 
-[Quick Start](#-quick-start-in-5-minutes) • [Architecture](#-architecture) • [Feature Matrix](#-feature-matrix) • [Softphone Setup](#-softphone-configuration) • [Security](#-security--hardening)
+[Why I Built This](#-why-i-built-this-a-note-from-the-author) • [Quick Start](#-quick-start-in-5-minutes) • [Architecture](#-architecture) • [Feature Matrix](#-feature-matrix) • [Softphone Setup](#-softphone-configuration) • [Security](#-security--hardening)
 
 </div>
+
+---
+
+## 💡 Why I Built This (A Note from the Author)
+
+Reliance Jio provides a complimentary unlimited fixed-line landline number with every fiber and AirFiber broadband plan. But they deliberately lock that landline inside their proprietary JioJoin app, which refuses to work unless you are physically connected to your home Wi-Fi network.
+
+When traveling abroad or outside my home, I wanted to be able to make calls back home to India and answer incoming calls on my iPhone and laptop without incurring crippling international roaming charges.
+
+**I searched the internet, forums, and GitHub, and couldn't find a single person who had solved or shared how to liberate this.**
+
+We invested hundreds of hours reverse-engineering:
+- Jio's IMS network SIP registration parameters and P-Preferred-Identity routing.
+- The 464XLAT and IPv6 routing requirements between cloud VPS servers and local home gateways.
+- Low-latency WireGuard tunneling configurations designed to carry real-time voice packets with zero packet jitter.
+
+**We are giving this entire production PBX stack away 100% free and open-source.** If this project saves you money and liberates your landline, please show your support with a ⭐ star on GitHub!
 
 ---
 
@@ -20,7 +37,7 @@
 > **Using an AI Coding Assistant? (Claude Code, Gemini CLI, Cursor, Windsurf)**  
 > Deploy your cloud PBX automatically by pasting this prompt into your agent terminal:  
 > ```text
-> "Connect to my VPS via SSH. Verify Docker and Docker Compose are installed. Clone https://github.com/marufagul/jiofiber-asterisk-global-pbx, configure .env with my Jio landline number and a strong SIP password, start the Asterisk PBX container via docker-compose up -d, and generate the WireGuard client configuration for my OpenWrt home router."
+> "Connect to my VPS via SSH. Verify Docker and Docker Compose are installed. Clone https://github.com/marufagul/jiofiber-asterisk-global-pbx, run ./setup.sh to configure my landline number and extensions, start the Asterisk PBX container, and generate the WireGuard client configuration for my OpenWrt home router."
 > ```
 
 ---
@@ -32,13 +49,10 @@
 ```bash
 git clone https://github.com/marufagul/jiofiber-asterisk-global-pbx.git
 cd jiofiber-asterisk-global-pbx
-cp .env.example .env
-# Edit .env with your landline number and chosen extension passwords:
-nano .env
-
-# Start Asterisk PBX stack
-docker compose up -d
+chmod +x setup.sh
+./setup.sh
 ```
+The interactive wizard prompts for your phone number and passwords, synchronizes the configuration files, and launches the container stack.
 
 ### Step 2: Connect your Home OpenWrt Router
 
@@ -52,7 +66,7 @@ wget -O - https://raw.githubusercontent.com/marufagul/jiofiber-asterisk-global-p
 Open Linphone or MicroSIP on your iPhone / Android / Laptop:
 - **Server**: `<YOUR_VPS_IP>:5060` (or TLS `5061`)
 - **Username**: `1001`
-- **Password**: `<PASSWORD_FROM_ENV>`
+- **Password**: `<PASSWORD_ENTERED_IN_SETUP>`
 
 Dial any mobile or landline number — your call originates through your Jio landline at home with 0 roaming charges!
 
@@ -120,7 +134,7 @@ Dial any mobile or landline number — your call originates through your Jio lan
 
 Exposing a SIP server to the public Internet without protection invites automated scanners. This stack comes pre-hardened:
 - **Private WireGuard Tunnel**: The softphone can optionally connect entirely over WireGuard VPN with SIP ports closed to the public Internet.
-- **Fail2ban Integration**: Auto-bans brute-force attempts on SIP UDP/TCP.
+- **Fail2ban Integration**: Auto-bans brute-force attempts on SIP UDP/TCP. See [Security Hardening Guide](docs/SECURITY_HARDENING.md).
 - **SRTP Media Encryption**: Calls between your smartphone and the PBX are encrypted against eavesdropping.
 
 ---
