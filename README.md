@@ -31,6 +31,8 @@ We invested hundreds of hours reverse-engineering:
 
 **We are giving this entire production PBX stack away 100% free and open-source.** If this project saves you money and liberates your landline, please show your support with a ⭐ star on GitHub!
 
+— **Gul Marufa ([@marufagul](https://github.com/marufagul))**
+
 ---
 
 > [!TIP]
