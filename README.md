@@ -16,6 +16,14 @@
 
 ---
 
+> [!TIP]
+> ### 📦 Complete Jio OpenWrt Ecosystem Suite
+> • 🌍 **Global Cloud Asterisk PBX:** [jiofiber-asterisk-global-pbx](https://github.com/marufagul/jiofiber-asterisk-global-pbx) *(This Repo - Zero roaming landline calling on your phone worldwide)*  
+> • 🚀 **5G WAN & Wi-Fi 6 Engine:** [jio-airfiber-openwrt-5g-wan](https://github.com/marufagul/jio-airfiber-openwrt-5g-wan) *(2.5G Wire-Speed, 464XLAT & HE160 Wi-Fi for JIDU6401)*  
+> • 📞 **Home Landline Voice Gateway:** [openwrt-jiofiber-voice-lan](https://github.com/marufagul/openwrt-jiofiber-voice-lan) *(Free landline calls over Wi-Fi via JioJoin & SIP)*
+
+---
+
 ## 💡 Why I Built This (A Note from the Author)
 
 Reliance Jio provides a complimentary unlimited fixed-line landline number with every fiber and AirFiber broadband plan. But they deliberately lock that landline inside their proprietary JioJoin app, which refuses to work unless you are physically connected to your home Wi-Fi network.
