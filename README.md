@@ -58,10 +58,22 @@ The interactive wizard prompts for your phone number and passwords, synchronizes
 
 ### Step 2: Connect your Home OpenWrt Router
 
-On your OpenWrt router, run the reverse tunnel agent:
-```bash
-wget -O - https://raw.githubusercontent.com/marufagul/jiofiber-asterisk-global-pbx/main/router-agent/setup_router_tunnel.sh | sh -s -- --server <YOUR_VPS_IP>
-```
+On your OpenWrt router, choose your tunnel transport:
+
+* **Option A: WireGuard Tunnel (FTTH / High Performance):**
+  ```bash
+  wget -O - https://raw.githubusercontent.com/marufagul/jiofiber-asterisk-global-pbx/main/router-agent/setup_router_tunnel.sh | sh -s -- --server <YOUR_VPS_IP>
+  ```
+
+* **Option B: SSH Layer 3 Tunnel with Exponential Backoff + Jitter (Recommended for 5G AirFiber / CGNAT):**
+  ```bash
+  wget -O - https://raw.githubusercontent.com/marufagul/jiofiber-asterisk-global-pbx/main/router-agent/setup_ssh_l3_tunnel.sh | sh -s -- --server <YOUR_VPS_IP> --port 2222
+  ```
+  *(See [SSH Layer 3 Tunnel Guide](docs/SSH_L3_TUNNEL_FALLBACK.md) for details on why TCP port 2222 bypasses carrier UDP drops).*
+
+> [!NOTE]
+> **Router SIP Trunk Prerequisites:**  
+> The Asterisk PBX routes landline calls through your router at `10.10.10.2:5068`. Ensure your router has its local IMS voice daemon (`hgw-voice-app`) or SIP bridge active. Read our [Trunk Prerequisites & HGW Bridge Guide](docs/TRUNK_PREREQUISITES_AND_HGW_BRIDGE.md).
 
 ### Step 3: Register Softphone Anywhere in the World
 
