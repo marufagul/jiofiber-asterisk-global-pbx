@@ -66,10 +66,11 @@ The local SIP bridge on port 5068 is powered by the Sercomm / Jio IMS daemon (`h
    Contains your landline number, IMS realm, and P-CSCF tokens.
 3. **Hardware Identifiers in `/tmp/`:**
    ```sh
+   # IMPORTANT: Replace with YOUR serial number and WAN MAC from the bottom sticker of your router!
    echo "JIDU6401" > /tmp/deviceModel
-   echo "RSVHGHKW0079194" > /tmp/deviceSerial
+   echo "RSVHGHKW00XXXXX" > /tmp/deviceSerial       # <--- YOUR Serial Number from bottom sticker
    echo "SRCMJIO_JIDU6401_R2.0.9" > /tmp/firmVersion
-   echo "9c:d4:a6:c9:c0:5a" > /tmp/wanMAC
+   echo "9c:d4:a6:xx:xx:xx" > /tmp/wanMAC           # <--- YOUR WAN MAC from bottom sticker
    mkdir -p /tmp/cpe3
    echo "JIDU6401" > /tmp/cpe3/dps.productclass
    ```
